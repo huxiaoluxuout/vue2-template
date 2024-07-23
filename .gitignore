@@ -1,0 +1,7 @@
+/node_modules
+/.hbuilderx
+/unpackage
+/.idea
+*.DS_Store
+*.zip
+*.rar

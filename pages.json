@@ -1,0 +1,115 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^zshu-(.*)": "@/components/zshu-components/zshu-$1.vue",
+      "^ylx-(.*)": "@/components/ylx-components/ylx-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/mine/mine",
+      "style": {
+        "navigationBarTitleText": "MINE",
+        "navigationBarBackgroundColor": "#fff",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationStyle": "custom"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "",
+    "navigationBarBackgroundColor": "#fff",
+    "backgroundColor": "#F8F8F8"
+  },
+  "subPackages": [
+    {
+      "root": "pagesSub",
+      "pages": [
+        {
+          "path": "webView/webView",
+          "style": {
+            "navigationBarTitleText": ""
+          }
+        },
+        {
+          "path": "richText/richText",
+          "style": {
+            "navigationBarTitleText": ""
+          }
+        }
+      ]
+    },
+    {
+      "root": "pagesSubMine",
+      "pages": [
+        {
+          "path": "myBalances/myBalances",
+          "style": {
+            "navigationBarTitleText": "余额"
+          }
+        },
+        {
+          "path": "myOrder/myOrder",
+          "style": {
+            "navigationBarTitleText": "我的订单",
+            "enablePullDownRefresh": true
+          }
+        },
+        {
+          "path": "myCollection/myCollection",
+          "style": {
+            "navigationBarTitleText": "我的收藏",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "myCoupons/myCoupons",
+          "style": {
+            "navigationBarTitleText": "优惠券"
+          }
+        },
+        {
+          "path": "myOrderDetail/myOrderDetail",
+          "style": {
+            "navigationBarTitleText": "订单详情"
+          }
+        }
+      ]
+    }
+  ],
+  "tabBar": {
+    "selectedColor": "#272729",
+    "color": "#919499",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tabbar/index.png",
+        "selectedIconPath": "static/tabbar/index_on.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "static/tabbar/mine.png",
+        "selectedIconPath": "static/tabbar/mine_on.png"
+      }
+    ]
+  },
+  "uniIdRouter": {}
+}

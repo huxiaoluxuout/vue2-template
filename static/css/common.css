@@ -1,0 +1,64 @@
+.ylx-flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    --num-columns: 2;
+    --gap: 20rpx;
+    --out-gap: 0rpx;
+    --item-width: calc(100% / var(--num-columns) - var(--gap));
+    gap: var(--gap);
+    margin-right: calc(-1 * var(--gap));
+
+    padding-left: var(--out-gap);
+    padding-right: var(--out-gap);
+}
+
+.ylx-flex-item {
+    width: var(--item-width);
+    box-sizing: border-box;
+    position: relative;
+}
+/*-----------------------------------------*/
+.page-content-tabbar {
+    /* #ifdef WEB */
+    min-height: calc(100vh - var(--window-top) - var(--tab-bar-height));
+    /* #endif */
+
+    /* #ifndef WEB */
+    min-height: 100vh;
+    /* #endif */
+}
+
+.page-content {
+    /* #ifdef WEB */
+    min-height: calc(100vh - var(--window-top));
+    /* #endif */
+
+    /* #ifndef WEB */
+    min-height: 100vh;
+    /* #endif */
+
+}
+
+
+.page-content-margin-x {
+    margin-left: 30rpx;
+    margin-right: 30rpx;
+}
+
+.page-content-padding-x {
+    padding-left: 30rpx;
+    padding-right: 30rpx;
+    box-sizing: border-box;
+}
+.page-content-margin-y {
+    margin-top: 30rpx;
+    margin-bottom: 30rpx;
+}
+
+.page-content-padding-y {
+    padding-top: 30rpx;
+    padding-bottom: 30rpx;
+    box-sizing: border-box;
+}
+/*-----------------------------------------*/
+

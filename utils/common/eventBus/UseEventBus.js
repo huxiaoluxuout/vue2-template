@@ -4,6 +4,23 @@ const instanceEventBus = new EventBusCore()
 
 export class useEventBus {
 
+    static env = 'uni'
+
+    /**
+     * @param {string} env - 环境变量 "uni" 或 "wx"
+     */
+    constructor(env = 'uni') {
+        if (env.toLocaleLowerCase() === 'uni') {
+            useEventBus.env = env
+            console.log('uniapp框架开发')
+        } else if (env.toLocaleLowerCase() === 'wx') {
+            console.log('微信小程序原生开发')
+            useEventBus.env = env
+        } else {
+            console.error(env, '-初始化传参错误-')
+        }
+    }
+
     // 定义导航类型常量
     static NAVIGATION_TYPES = {
         NAVIGATE_TO: 'navigateTo',
@@ -61,15 +78,18 @@ export class useEventBus {
 
         const fullPath = navigationType === useEventBus.NAVIGATION_TYPES.NAVIGATE_TO ? `${path}${query}${delimiter}currentRoute=${path}` : path;
 
-        /**
-         * TODO
-         * uni uniapp框架开发
-         * wx  微信小程序原生开发
-         */
-        uni[navigationType]({
-            url: fullPath,
-            fail: err => console.error('Navigation Error:', err),
-        });
+        if (useEventBus.env === 'uni') {
+            uni[navigationType]({
+                url: fullPath,
+                fail: err => console.error('Navigation Error:', err),
+            });
+        } else if (useEventBus.env === 'wx') {
+            wx[navigationType]({
+                url: fullPath,
+                fail: err => console.error('Navigation Error:', err),
+            });
+        }
+
     }
 
     /**

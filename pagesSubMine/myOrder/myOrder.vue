@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import instanceEventBus from "@/utils/common/eventBus/instance.js";
+import instanceEventBus from "@/utils/instanceEventBus.js";
 
 export default {
   data() {

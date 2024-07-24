@@ -38,7 +38,7 @@ import {mapGetters} from 'vuex'
 import {ylxBluetoothAuthorize, ylxNavigateTo} from "@/utils/uniTools";
 import useBluetoothManage from "@/utils/common/bluetooth/useBluetoothManage";
 
-import instanceEventBus from "@/utils/common/eventBus/instance.js";
+import instanceEventBus from "@/utils/instanceEventBus.js";
 import useLoginInterceptor from "@/utils/useLoginInterceptor";
 /*-------------------------------------------------------*/
 export default {
@@ -104,7 +104,7 @@ export default {
     },
 
     sendGlobal() {
-      this.$instanceEventBus.sendGlobal()
+      instanceEventBus.sendGlobal()
     },
     /*----------------------------------------*/
     tiktok() {

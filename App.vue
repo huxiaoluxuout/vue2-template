@@ -1,5 +1,5 @@
 <script>
-	import instanceEventBus from "@/utils/common/eventBus/instance";
+	import instanceEventBus from "@/utils/instanceEventBus";
   import {wxLogin} from "@/network/apis/meiFa";
   import store from "@/store";
 
@@ -21,16 +21,12 @@
 		onLaunch: function() {
 			console.log('App Launch')
       getWxLoginInfo()
-   /*   instanceEventBus.registerGlobalEvent(({args, source})=>{
-        console.log('App Launch',...args, source)
-        getWxLoginInfo()
-
-      })*/
-      this.$instanceEventBus.registerGlobalEvent(({args, source})=>{
-        console.log('$instanceEventBus',args,source)
+      instanceEventBus.registerGlobalEvent(({args, source}) => {
+        console.log('App Launch', ...args, source)
         getWxLoginInfo()
 
       })
+
 		},
 		onShow: function() {
 			console.log('App Show')

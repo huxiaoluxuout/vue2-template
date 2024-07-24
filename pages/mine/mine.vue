@@ -11,7 +11,7 @@
   </view>
 </template>
 <script>
-import instanceEventBus from "@/utils/common/eventBus/instance.js";
+import instanceEventBus from "@/utils/instanceEventBus.js";
 import {ylxNavigateTo} from "@/utils/uniTools";
 import {mapGetters} from 'vuex'
 

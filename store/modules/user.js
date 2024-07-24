@@ -67,8 +67,8 @@ export default {
     mutations: {
         setIsLoggedIn(state,type) {
             state.isLoggedIn = type;
-            console.log(state.isLoggedIn);
         },
+
         login(state, userInfo) {
             this.commit('setUserInfo', userInfo)
             state.isLoggedIn = true;

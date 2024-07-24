@@ -28,20 +28,14 @@
 
 
 <script>
-import {mapGetters} from 'vuex' //引入mapGetters
+import {mapGetters} from 'vuex'
 
 import {ylxBluetoothAuthorize} from "@/utils/uniTools";
 import useBluetoothManage from "@/utils/common/bluetooth/useBluetoothManage";
 
 import instanceEventBus from "@/utils/common/eventBus/instance.js";
 import useLoginInterceptor from "@/utils/useLoginInterceptor";
-import store from "@/store";
-
 /*-------------------------------------------------------*/
-function myOrder() {
-  console.log('myOrder')
-}
-
 export default {
   data() {
     return {
@@ -63,7 +57,6 @@ export default {
     ...mapGetters(['hasLogged'])
   },
   onLoad() {
-    // instanceMyOrderHandler = useLoginInterceptor({onSuccess: this.myOrder})
 
   },
   methods: {
@@ -91,9 +84,7 @@ export default {
       useLoginInterceptor({onSuccess: this.myOrder})()
     },
     setLoggedIn() {
-      console.log('hasLogged:', this.hasLogged)
-      store.dispatch('asyncSetIsLoggedIn', !this.hasLogged)
-
+      this.$store.dispatch('asyncSetIsLoggedIn', !this.hasLogged)
     },
 
 

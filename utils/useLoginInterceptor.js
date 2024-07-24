@@ -27,7 +27,7 @@ export default function ({onError = onErrorHandler, onSuccess}) {
         console.error(`${onSuccess}:必须是函数`)
         return
     }
-    console.log('11111')
+
     return function (...args) {
         const isLogeIn = store.getters.hasLogged
         if (isLogeIn) {

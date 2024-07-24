@@ -17,10 +17,10 @@
     <button @click="eventBusMine">eventBusMine</button>
     <hr/>
 
-    <hr/>
+<!--    <hr/>
     <button @click="tiktok">抖音</button>
     <button @click="customCamera">自定义相机</button>
-    <hr/>
+    <hr/>-->
 
     <!--    <button @click="buttontn">uniBLUETOOTH</button>-->
     <div v-for="(item,index) in 4" :key="index" style="margin-top: 10px;margin-bottom: 10px;">
@@ -80,6 +80,9 @@ export default {
     /*-----------------------------------*/
 
     myOrder() {
+      // this.$showAlert('插件弹框')
+      console.log('myOrder',this.$options);
+      return
       instanceEventBus.emit({
         targetPath: '/pagesSubMine/myOrder/myOrder',
         source: 'xixi'
@@ -101,7 +104,7 @@ export default {
     },
 
     sendGlobal() {
-      instanceEventBus.sendGlobal()
+      this.$instanceEventBus.sendGlobal()
     },
     /*----------------------------------------*/
     tiktok() {

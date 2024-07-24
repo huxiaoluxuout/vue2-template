@@ -33,6 +33,8 @@ export default {
   onLoad() {
     instanceEventBus.on(({args, source}) => {
       console.log(...args, source)
+      let [{fromPage,age}]=args
+      console.log(fromPage,age)
     });
   },
   methods: {ylxNavigateTo}

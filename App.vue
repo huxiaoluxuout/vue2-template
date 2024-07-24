@@ -21,8 +21,13 @@
 		onLaunch: function() {
 			console.log('App Launch')
       getWxLoginInfo()
-      instanceEventBus.registerGlobalEvent(({args, source})=>{
+   /*   instanceEventBus.registerGlobalEvent(({args, source})=>{
         console.log('App Launch',...args, source)
+        getWxLoginInfo()
+
+      })*/
+      this.$instanceEventBus.registerGlobalEvent(({args, source})=>{
+        console.log('$instanceEventBus',args,source)
         getWxLoginInfo()
 
       })

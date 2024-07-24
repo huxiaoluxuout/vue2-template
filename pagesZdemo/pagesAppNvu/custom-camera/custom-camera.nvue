@@ -10,16 +10,16 @@
 
       <!--顶部菜单区域背景-->
       <cover-view class="top-menu">
-        <cover-image v-if="!flashlight" @click.stop="toggle" class="top-menu-flash" src="/static/live-camera/flash-off.png"></cover-image>
-        <cover-image v-else-if="flashlight" @click.stop="toggle" class="top-menu-flash" src="/static/live-camera/flash-on.png"></cover-image>
+        <cover-image v-if="!flashlight" @click.stop="toggle" class="top-menu-flash" src="/static/app/live-camera/flash-off.png"></cover-image>
+        <cover-image v-else-if="flashlight" @click.stop="toggle" class="top-menu-flash" src="/static/app/live-camera/flash-on.png"></cover-image>
 
-        <cover-image class="top-menu-flip" @click.stop="switchCamera" src="/static/live-camera/flip.png"></cover-image>
+        <cover-image class="top-menu-flip" @click.stop="switchCamera" src="/static/app/live-camera/flip.png"></cover-image>
 
       </cover-view>
 
       <cover-view class="bottom-menu">
         <!--快门键-->
-        <cover-image class="menu-snapshot" @click.stop="snapshot" src="/static/live-camera/shutter.png"></cover-image>
+        <cover-image class="menu-snapshot" @click.stop="snapshot" src="/static/app/live-camera/shutter.png"></cover-image>
 
       </cover-view>
 

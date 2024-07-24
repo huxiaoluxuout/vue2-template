@@ -37,9 +37,11 @@
 </script>
 
 <style>
-
+/* #ifndef APP-PLUS-NVUE */
 @import "static/css/ylx-tailwindcss.css";
 @import "static/css/common.css";
 @import "static/css/mf.css";
+/* #endif */
+
 
 </style>

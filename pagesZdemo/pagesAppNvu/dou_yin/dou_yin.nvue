@@ -1,0 +1,267 @@
+<template>
+
+  <view class="page-swiper">
+
+    <view class="navbar" @click="backPage" style="width:40px;height: 40px; position: fixed;top: 30px;left: 10rpx;z-index: 999">
+     <text style="color:#fff;font-size: 16px"><<</text>
+    </view>
+
+    <swiper class="content-wrapper" vertical :render-whole="true" :autoplay="false" :circular="false" :touchable="false"
+            @change="swiperChanged" @animationfinish="animationfinish">
+
+      <template v-for="(item,index) in originList">
+        <swiper-item class="content-wrapper" :key="item.id">
+          <view class="content-wrapper video-box">
+            <video :id="'video'+index" class="content-wrapper video" v-if="index===showVideoIndex" :src="item.video" :controls="true"
+                   :enable-play-gesture="true" :enable-progress-gesture="true"
+                   :poster="item.img"
+            >
+            </video>
+
+            <template v-if="index!==showVideoIndex">
+              <video v-if="index===showVideoIndex-1" :id="'video'+index" class="content-wrapper video" :src="item.video" :poster="item.img"></video>
+              <video v-if="index===showVideoIndex+1" :id="'video'+index" class="content-wrapper video" :src="item.video" :poster="item.img"></video>
+            </template>
+
+            <!-- 文本标题 -->
+            <view class="bottom-desc">
+              <text class="tips">{{ index + 1 }} / {{ originList.length }}</text>
+              <text class="bottom-desc-title">{{ item.title }}</text>
+
+            </view>
+
+          </view>
+
+        </swiper-item>
+      </template>
+    </swiper>
+
+  </view>
+</template>
+
+<script>
+
+const videoContexts = []
+export default {
+  data() {
+    return {
+      originList: [], // 源数据
+      showVideoIndex: 0, //控制video是否渲染
+      page: 1, // 视频分页
+      pageSize: 8,
+      updateItemChangeHandle: null,
+    }
+  },
+
+  onLoad() {
+    this.getVideoList()
+  },
+
+  onUnload() {
+    this.videoContext.stop()
+
+  },
+
+  computed: {
+    videoContext() {
+      let videoId = 'video' + this.showVideoIndex
+      const item = this.originList[this.showVideoIndex]
+      this.id = item.id
+
+      return videoContexts.find(item => item.videoId === videoId).handler
+    },
+    currentItem() {
+      return this.originList[this.showVideoIndex]
+    }
+  },
+
+  methods: {
+    backPage() {
+      uni.navigateBack({
+        delta: 1,
+        fail(errMsg) {
+          console.error(errMsg)
+        },
+      });
+    },
+
+    /* 获取视频数据 */
+    getVideoList() {
+      const that = this
+      uni.request({
+        url: 'https://feiying.ahjinti.cn/common/api.video/videolist',
+        method: 'post',
+        success(response) {
+          let res = response.data
+          if (res.code === 200) {
+            if (res.data.length) {
+              if (that.page === 1) {
+                that.init(res.data)
+                that.page++
+              } else {
+                that.$nextTick(() => {
+                  that.originList = [...that.originList, ...res.data];
+                });
+                that.page++
+              }
+            }
+
+          } else {
+            uni.showToast({title: res.msg, icon: 'none'})
+          }
+        },
+      })
+
+    },
+
+    init(cacheVideoList) {
+      this.originList = cacheVideoList
+      this.setVideoContext(0)
+      this.$nextTick(() => {
+        this.startTimer(() => {
+          this.videoContext.play()
+        }, 50)
+      })
+
+    },
+
+    setVideoContext(current) {
+      this.$nextTick(() => {
+        const videoId = 'video' + current
+        const videoContext = uni.createVideoContext(videoId)
+        const hasAlready = videoContexts.find(item => item.videoId === videoId)
+        if (hasAlready) return
+        videoContexts.push({videoId: videoId, handler: videoContext})
+      })
+    },
+    startTimer(callback, delay, ...args) {
+      let timer = setTimeout(() => {
+        callback(...args);
+        clearTimeout(timer);
+      }, delay);
+    },
+
+    // 自动暂停/播放
+    changePlay(current, type) {
+      let videoId = 'video' + current
+      let backVideoId = 'video' + (current + 1)
+      let frontVideoId = 'video' + (current - 1)
+
+      if (type === 'toPrev') {
+        let backVideoVideoContext = videoContexts.find(item => item.videoId === backVideoId)
+
+        if (backVideoVideoContext) {
+          backVideoVideoContext.handler.pause()
+        }
+
+        this.setVideoContext(current)
+        this.startTimer(() => {
+          videoContexts.find(item => item.videoId === videoId).handler.play()
+        }, 50)
+
+      } else if (type === 'toNext') {
+        let frontVideoContext = videoContexts.find(item => item.videoId === frontVideoId)
+        if (frontVideoContext) {
+          frontVideoContext.handler.pause()
+        }
+        this.setVideoContext(current)
+        this.startTimer(() => {
+          videoContexts.find(item => item.videoId === videoId).handler.play()
+        }, 50)
+      }
+
+
+    },
+
+    animationfinish({detail: {current}}) {
+      // 向下一个滑动
+      if (current > this.showVideoIndex) {
+        this.showVideoIndex = current;
+        this.changePlay(current, 'toNext')
+      }
+      // 向上一个滑动
+      else if (current < this.showVideoIndex) {
+        this.showVideoIndex = current;
+        this.changePlay(current, 'toPrev')
+      }
+    },
+
+    swiperChanged({detail: {current}}) {
+      this.setVideoContext(current)
+      // 向下一个滑动
+      if (current > this.showVideoIndex) {
+        let updateNum = ((this.page - 1) * this.pageSize) - 2
+        let currentNum = current + 1
+        if (currentNum >= updateNum) {
+          console.log('更新数据')
+          this.getVideoList()
+        }
+      }
+
+    },
+
+
+  }
+}
+</script>
+
+<style scoped>
+
+.page-swiper {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  /* #endif */
+  width: 750rpx;
+  flex: 1;
+
+}
+
+.content-wrapper {
+  width: 750rpx;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+
+.video {
+//transform: translateY(-200rpx);
+}
+
+.video-box {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  flex-direction: column;
+  /* #endif */
+  background-color: #000000;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+
+/*---------------------------------------------*/
+.bottom-desc {
+  position: absolute;
+  width: 640rpx;
+  bottom: 60px;
+  z-index: 9999;
+  margin-left: 30rpx;
+  margin-right: 80rpx;
+}
+
+.bottom-desc-title {
+  font-size: 18px;
+  color: #ffffff;
+
+}
+
+.tips {
+  width: 560rpx;
+  font-size: 30rpx;
+  color: #ffffff;
+}
+
+
+</style>

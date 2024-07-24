@@ -1,0 +1,309 @@
+<template>
+  <cover-view style="position: relative;">
+
+    <cover-view class="live-camera" :style="{ width: windowWidth, height: windowHeight }">
+      <live-pusher id="livePusher" ref="livePusher" class="live-pusher" mode="FHD" beauty="0" whiteness="0"
+                   :aspect="aspect" min-bitrate="1000" audio-quality="low" device-position="front" :auto-focus="autoFocus"
+                   :muted="true" :enable-camera="true" :enable-mic="false" :zoom="false"
+                   :style="{ width: windowWidth, height: windowHeight }">
+      </live-pusher>
+
+      <!--顶部菜单区域背景-->
+      <cover-view class="top-menu">
+        <cover-image v-if="!flashlight" @click.stop="toggle" class="top-menu-flash" src="/static/live-camera/flash-off.png"></cover-image>
+        <cover-image v-else-if="flashlight" @click.stop="toggle" class="top-menu-flash" src="/static/live-camera/flash-on.png"></cover-image>
+
+        <cover-image class="top-menu-flip" @click.stop="switchCamera" src="/static/live-camera/flip.png"></cover-image>
+
+      </cover-view>
+
+      <cover-view class="bottom-menu">
+        <!--快门键-->
+        <cover-image class="menu-snapshot" @click.stop="snapshot" src="/static/live-camera/shutter.png"></cover-image>
+
+      </cover-view>
+
+
+    </cover-view>
+
+  </cover-view>
+</template>
+
+<script>
+
+/**
+ *
+ * App平台：使用 <live-pusher/> 组件，打包 App 时必须勾选 manifest.json->App 模块权限配置->LivePusher(直播推流) 模块
+ *
+ */
+
+let _this = null;
+let livePusher = null;//流视频对象
+
+export default {
+
+  data() {
+    return {
+
+      aspect: '2:3', //比例
+      windowWidth: '', //屏幕可用宽度
+      windowHeight: '', //屏幕可用高度
+
+
+      flashlight: false,
+
+      isPageReady: false,
+
+      autoFocus: false,
+    };
+  },
+  onLoad(e) {
+    _this = this;
+    this.initCamera();
+  },
+  onReady() {
+    livePusher = uni.createLivePusherContext('livePusher', this);
+    setTimeout(() => {
+      this.startPreview(); //开启预览并设置摄像头
+    }, 30)
+
+    if (!this.isPageReady) {
+      this.isPageReady = true
+    }
+
+
+  },
+
+  onShow() {
+    if (this.isPageReady) {
+      this.startPreview();
+
+    }
+  },
+  onHide() {
+    if (this.isPageReady) {
+      this.stopPreview()
+
+    }
+  },
+
+
+  methods: {
+    //初始化相机
+    initCamera() {
+      uni.getSystemInfo({
+        success: function (res) {
+          _this.windowWidth = res.windowWidth;
+          _this.windowHeight = res.windowHeight;
+          let zcs = _this.aliquot(_this.windowWidth, _this.windowHeight);
+          _this.aspect = (_this.windowWidth / zcs) + ':' + (_this.windowHeight / zcs);
+          console.log('画面比例：' + _this.aspect);
+        }
+      });
+    },
+
+    //整除数计算
+    aliquot(x, y) {
+      if (x % y === 0) return y;
+      return this.aliquot(y, x % y);
+    },
+
+    //开始预览
+    startPreview() {
+      this.autoFocus = true
+      livePusher.startPreview({
+        success: a => {
+          console.log('开始预览', a)
+        }, fail: a => {
+          console.log('fail', a)
+        }
+      });
+    },
+
+    //停止预览
+    stopPreview() {
+      this.autoFocus = false
+      livePusher.stopPreview();
+    },
+
+    //抓拍
+    snapshot() {
+      uni.vibrateShort({
+        success: function () {
+          console.log('震动');
+        }
+      });
+
+      livePusher.snapshot({
+        success: e => {
+          this.uploadImg(e)
+          _this.stopPreview();
+          _this.startPreview();
+
+        }
+      });
+    },
+    //
+    uploadImg(e) {
+      uni.$emit('imgUrl', e.message.tempImagePath)
+      uni.navigateBack()
+    },
+
+    //从相册中选择图片
+    chooseImg() {
+      const that = this
+
+      plus.gallery.pick(function (path) {
+        console.log('从相册选择path', path)
+
+      }, function (err) {
+        console.log('选择相片失败: ' + JSON.stringify(err.message));
+      }, {
+        filter: "image"
+      });
+    },
+
+    //返回
+    back() {
+      uni.navigateBack();
+    },
+    //镜头反转
+    switchCamera() {
+      livePusher.switchCamera();
+    },
+
+    //打开手电筒
+    toggle() {
+
+      if (!this.flashlight) {
+        onTorch();
+      } else {
+        offTorch()
+      }
+      this.flashlight = !this.flashlight
+
+    },
+
+
+  }
+};
+
+
+// 打开闪光灯
+const onTorch = () => {
+  try {
+    var os = plus.os.name;
+    if ('iOS' === os) {
+      var device = plus.ios.invoke('AVCaptureDevice', 'defaultDeviceWithMediaType:', 'vide');
+      plus.ios.invoke(device, 'lockForConfiguration:', null);
+      plus.ios.invoke(device, 'setTorchMode:', 1);
+      plus.ios.invoke(device, 'setFlashMode:', 1);
+      plus.ios.invoke(device, 'unlockForConfiguration');
+    } else if ('Android' === os) {
+      var main = plus.android.runtimeMainActivity();
+      var camera = main.getSystemService('camera');
+      var ids = plus.android.invoke(camera, 'getCameraIdList');
+      for (var i = 0; i < ids.length; i++) {
+        var c = plus.android.invoke(camera, 'getCameraCharacteristics', ids[i]);
+        var available = plus.android.invoke(c, 'get', plus.android.getAttribute(c, 'FLASH_INFO_AVAILABLE'));
+        var facing = plus.android.invoke(c, 'get', plus.android.getAttribute(c, 'LENS_FACING'));
+        if (null != available && available && null != facing && 1 == facing) {
+          plus.android.invoke(camera, 'setTorchMode', ids[i], true);
+        }
+      }
+    }
+  } catch (e) {
+    console.error('error @onTorch!!');
+  }
+}
+
+
+//关闭闪光灯
+const offTorch = () => {
+  try {
+    var os = plus.os.name;
+    if ('iOS' === os) {
+      var device = plus.ios.invoke('AVCaptureDevice', 'defaultDeviceWithMediaType:', 'vide');
+      plus.ios.invoke(device, 'lockForConfiguration:', null);
+      plus.ios.invoke(device, 'setTorchMode:', 0);
+      plus.ios.invoke(device, 'setFlashMode:', 0);
+      plus.ios.invoke(device, 'unlockForConfiguration');
+    } else if ('Android' === os) {
+      var main = plus.android.runtimeMainActivity();
+      var camera = main.getSystemService('camera');
+      var ids = plus.android.invoke(camera, 'getCameraIdList');
+      for (var i = 0; i < ids.length; i++) {
+        var c = plus.android.invoke(camera, 'getCameraCharacteristics', ids[i]);
+        var available = plus.android.invoke(c, 'get', plus.android.getAttribute(c, 'FLASH_INFO_AVAILABLE'));
+        var facing = plus.android.invoke(c, 'get', plus.android.getAttribute(c, 'LENS_FACING'));
+        if (null != available && available && null != facing && 1 == facing) {
+          plus.android.invoke(camera, 'setTorchMode', ids[i], false);
+        }
+      }
+    }
+  } catch (e) {
+    console.error('error @offTorch!!');
+  }
+}
+
+</script>
+
+<style scoped>
+.live-camera {
+  display: flex;
+  flex-direction: column;
+}
+
+.live-pusher {
+  position: absolute;
+  top: 0;
+  z-index: 10;
+}
+
+
+.top-menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 750rpx;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 30px;
+  padding-right: 30px;
+  background: rgba(0, 0, 0, .1);
+  z-index: 20;
+
+}
+
+.top-menu-flip {
+  width: 25px;
+  height: 25px;
+}
+
+.top-menu-flash {
+  width: 25px;
+  height: 25px;
+}
+
+
+.bottom-menu {
+  position: absolute;
+  left: 0;
+  bottom: 200rpx;
+  width: 750rpx;
+  height: 180rpx;
+  align-items: center;
+  justify-content: center;
+//background: rgba(0, 0, 0, .3); z-index: 20;
+
+}
+
+.menu-snapshot {
+  width: 60px;
+  height: 60px;
+}
+
+</style>

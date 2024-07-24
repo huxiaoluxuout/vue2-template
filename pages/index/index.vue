@@ -17,6 +17,11 @@
     <button @click="eventBusMine">eventBusMine</button>
     <hr/>
 
+    <hr/>
+    <button @click="tiktok">抖音</button>
+    <button @click="customCamera">自定义相机</button>
+    <hr/>
+
     <!--    <button @click="buttontn">uniBLUETOOTH</button>-->
     <div v-for="(item,index) in 4" :key="index" style="margin-top: 10px;margin-bottom: 10px;">
       AAALorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores, aut consequatur cum delectus deleniti
@@ -30,7 +35,7 @@
 <script>
 import {mapGetters} from 'vuex'
 
-import {ylxBluetoothAuthorize} from "@/utils/uniTools";
+import {ylxBluetoothAuthorize, ylxNavigateTo} from "@/utils/uniTools";
 import useBluetoothManage from "@/utils/common/bluetooth/useBluetoothManage";
 
 import instanceEventBus from "@/utils/common/eventBus/instance.js";
@@ -97,6 +102,13 @@ export default {
 
     sendGlobal() {
       instanceEventBus.sendGlobal()
+    },
+    /*----------------------------------------*/
+    tiktok() {
+      ylxNavigateTo('pagesZdemo/pagesAppNvu/dou_yin/dou_yin')
+    },
+    customCamera() {
+      ylxNavigateTo('pagesZdemo/pagesAppNvu/custom-camera/custom-camera')
     },
     /*-----------------------------------*/
     buttontn() {

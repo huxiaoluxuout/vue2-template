@@ -90,6 +90,24 @@
           }
         }
       ]
+    },
+    {
+      "root": "pagesZdemo/pagesAppNvu",
+      "pages": [
+        {
+          "path": "custom-camera/custom-camera",
+          "style": {
+            "navigationBarTitleText": "拍照"
+          }
+        },
+        {
+          "path": "dou_yin/dou_yin",
+          "style": {
+            "navigationBarTitleText": "",
+            "navigationStyle": "custom"
+          }
+        }
+      ]
     }
   ],
   "tabBar": {

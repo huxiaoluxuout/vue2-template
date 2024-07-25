@@ -3,16 +3,16 @@
   <view class="ylx-flex-container" :class="resultClass" :style="resultStyle">
     <!--图片-->
     <view class="ylx-flex-item upload-img" v-for="(item,index) in localFileList" :key="index">
-      <ylx-image :src="item.thumb"  custom-class="ylx-img" width="100%" @imgClick="previewImage(index)"></ylx-image>
+      <ylx-image :src="item.thumb" custom-class="ylx-img" width="100%" @imgClick="previewImage(index)"></ylx-image>
       <view class="del-icon" @click.stop="delImage(index)">
-        <image src="./ylx-static/close.png" class="del"></image>
+        <image src="/static/ylx-components/close.png" class="del"></image>
       </view>
     </view>
 
     <!--图片上传-->
     <view v-show="isShowUpload" class="ylx-flex-item upload-icon-position" @click="chooseFile">
       <slot name="upload">
-        <ylx-image custom-class="ylx-img" width="100%" src="/components/ylx-components/ylx-static/picture.png"></ylx-image>
+        <ylx-image custom-class="ylx-img" width="100%" src="/static/ylx-components/picture.png"></ylx-image>
       </slot>
     </view>
   </view>
@@ -164,7 +164,9 @@ export default {
         fail: function (fail) {
           console.warn(fail)
         },
-      });
+      }).catch(err=>{
+        console.log(err)
+      })
 
     },
 

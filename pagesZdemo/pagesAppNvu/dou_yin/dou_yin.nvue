@@ -1,9 +1,8 @@
 <template>
-
   <view class="page-swiper">
 
     <view class="navbar" @click="backPage" style="width:40px;height: 40px; position: fixed;top: 30px;left: 10rpx;z-index: 999">
-     <text style="color:#fff;font-size: 16px"><<</text>
+      <text style="color:#fff;font-size: 16px"><<</text>
     </view>
 
     <swiper class="content-wrapper" vertical :render-whole="true" :autoplay="false" :circular="false" :touchable="false"
@@ -37,6 +36,7 @@
     </swiper>
 
   </view>
+
 </template>
 
 <script>

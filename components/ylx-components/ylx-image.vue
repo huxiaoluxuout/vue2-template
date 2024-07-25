@@ -188,7 +188,7 @@ export default {
 }
 
 .loading-class {
-  background-image: url('ylx-static/loading.png');
+  background-image: url('/static/ylx-components/loading.png');
 }
 
 
@@ -223,7 +223,7 @@ export default {
 }
 
 .loading-class-err {
-  background-image: url('ylx-static/loading-err.png');
+  background-image: url('/static/ylx-components/loading-err.png');
 }
 
 </style>

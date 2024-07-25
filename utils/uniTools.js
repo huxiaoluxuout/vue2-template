@@ -1,7 +1,10 @@
 import pagesConfig from "@/pages.json";
 
 import {promiseCallback} from "@/utils/tools";
+// #ifdef MP
 import {mpCheckAuthorizes} from "@/utils/common/authorize/mpAuthorizes";
+
+// #endif
 
 const {tabBar: {list: tabBarPages} = {list: []}} = pagesConfig
 
@@ -263,9 +266,12 @@ function showModelHandler(title, params) {
     });
 }
 
+// #ifdef MP
 function ylxBluetoothAuthorize(leadText='请允许小程序使用蓝牙') {
     return promiseCallback(mpCheckAuthorizes, 'bluetooth', leadText)
 }
+// #endif
+
 
 export {
     ylxAttributeStylers,
@@ -282,6 +288,8 @@ export {
     ylxRedirectTo,
     ylxOpenWxDebug,
     ylxToast,
+    // #ifdef MP
     ylxBluetoothAuthorize,
+    // #endif
     showModelHandler,
 }

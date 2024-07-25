@@ -44,7 +44,6 @@ import useLoginInterceptor from "@/utils/useLoginInterceptor";
 export default {
   data() {
     return {
-      refUploadimg: null,
       fileImageList: [
         {url: "https://mf.hzjxsj.com/uploads/20240706/790ec706d1ad37a8e11617af3385fdfa.xpng"},
         {url: "https://mf.hzjxsj.com/uploads/20240706/790ec706d1ad37a8e11617af3385fdfa.png"},

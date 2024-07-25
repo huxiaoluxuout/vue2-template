@@ -2,8 +2,8 @@
   "easycom": {
     "autoscan": true,
     "custom": {
-      "^zshu-(.*)": "@/components/zshu-components/zshu-$1.vue",
-      "^ylx-(.*)": "@/components/ylx-components/ylx-$1.vue"
+      "^ylx-(.*)": "@/components/ylx-components/ylx-$1.vue",
+      "^zshu-(.*)": "@/components/zshu-components/zshu-$1.vue"
     }
   },
   "pages": [

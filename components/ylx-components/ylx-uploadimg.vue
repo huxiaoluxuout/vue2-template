@@ -131,10 +131,6 @@ export default {
       }
 
     },
-    imgWidth() {
-
-      return `calc(750rpx - )`
-    }
   },
 
   methods: {

@@ -2,13 +2,13 @@
   <view class="ylx-image" :class="customClass" :style="resultCustomStyle">
 
     <view v-if="loadingStatus==='uploading'" class="ylx-loading">
-      <view class="loading-content" :class="customLoadingClass" :style="resultLoadingStyle"></view>
+      <view class="loading-content" :style="resultLoadingStyle"></view>
     </view>
 
     <image v-show="loadingStatus==='success'" class="ylx-scale-img" :style="imageStyle+customStyle" :src="imageSrc" :mode="mode" :showMenuByLongPress="showMenuByLongPress"
            @click="clickHandler" @load="loadingStatus = 'success'" @error="loadingStatus = 'error'"></image>
 
-    <view v-if="loadingStatus==='error'" class="ylx-error-img" :class="customLoadingErrClass" :style="resultLoadingErrStyle"></view>
+    <view v-if="loadingStatus==='error'" class="ylx-error-img" :style="resultLoadingErrStyle"></view>
 
   </view>
 </template>
@@ -17,6 +17,7 @@
 
 import {componentsMixin, localStringStyle, ylxStyleObjectToString} from "@/components/ylx-components/ylx-JS/template";
 import {computedRatio, parseSize} from "@/utils/tools";
+import {loading, loadingErr} from "@/components/ylx-components/ylx-static/base64.js";
 
 export default {
   name: "ylx-image",
@@ -57,19 +58,12 @@ export default {
     // 开启长按图片显示识别小程序码菜单
     showMenuByLongPress: Boolean,
 
-    customLoadingClass: {
-      type: String,
-      default: 'loading-class'
-    },
     customLoadingStyle: {
       type: [Object, String],
       default: () => {
       }
     },
-    customLoadingErrClass: {
-      type: String,
-      default: 'loading-class-err'
-    },
+
     customLoadingErrStyle: {
       type: [Object, String],
       default: () => {
@@ -83,6 +77,8 @@ export default {
   data() {
     return {
       loadingStatus: 'uploading',
+      loadingSrc: loading,
+      loadingErrSrc: loadingErr,
     };
   },
 
@@ -125,10 +121,19 @@ export default {
     },
 
     resultLoadingStyle() {
-      return ylxStyleObjectToString({}) + localStringStyle(this.customLoadingStyle)
+      return ylxStyleObjectToString({
+        background: `url(${this.loadingSrc})`,
+        backgroundSize: '100%,100%',
+        backgroundRepeat: 'no-repeat'
+
+      }) + localStringStyle(this.customLoadingStyle)
     },
     resultLoadingErrStyle() {
-      return ylxStyleObjectToString({}) + localStringStyle(this.customLoadingErrStyle)
+      return ylxStyleObjectToString({
+        background: `url(${this.loadingErrSrc})`,
+        backgroundSize: '100%,100%',
+        backgroundRepeat: 'no-repeat'
+      }) + localStringStyle(this.customLoadingErrStyle)
     }
   },
   methods: {
@@ -187,11 +192,6 @@ export default {
   background-repeat: no-repeat;
 }
 
-.loading-class {
-  background-image: url('/static/ylx-components/loading.png');
-}
-
-
 @keyframes loading {
   0% {
     transform: translate(-50%, -50%) rotate(0deg);
@@ -220,10 +220,6 @@ export default {
   transform: translate(-50%, -50%);
   background-size: 100% 100%;
   background-repeat: no-repeat;
-}
-
-.loading-class-err {
-  background-image: url('/static/ylx-components/loading-err.png');
 }
 
 </style>

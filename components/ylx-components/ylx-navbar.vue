@@ -289,7 +289,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
- @import "../../static/ylx-components/iconfont.css";
+ @import "./ylx-static/iconfont.css";
 
 .ylx-navbar {
   box-sizing: border-box;

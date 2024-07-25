@@ -2,6 +2,7 @@
 	import instanceEventBus from "@/utils/instanceEventBus";
   import {wxLogin} from "@/network/apis/meiFa";
   import store from "@/store";
+  import {ylxOpenWxDebug} from "@/utils/uniTools";
 
   function getWxLoginInfo() {
     wxLogin().then((loginRes) => {
@@ -20,6 +21,8 @@
   export default {
 		onLaunch: function() {
 			console.log('App Launch')
+      ylxOpenWxDebug()
+
       getWxLoginInfo()
       instanceEventBus.registerGlobalEvent(({args, source}) => {
         console.log('App Launch', ...args, source)

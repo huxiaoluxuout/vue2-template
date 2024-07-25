@@ -1,11 +1,12 @@
 <template>
   <view v-if="showLoading" class="ylx-page-loading" :class="customClass" :style="customStyle">
-    <image src="/components/ylx-components/ylx-static/loading-page.png" class="ylx-page-loading-img"></image>
+    <image :src="loadingPage" class="ylx-page-loading-img"></image>
   </view>
 </template>
 <script>
 
 import {localStringStyle, componentsMixin} from "@/components/ylx-components/ylx-JS/template";
+import {loadingPage} from "@/components/ylx-components/ylx-static/base64.js";
 
 
 export default {
@@ -14,6 +15,11 @@ export default {
   props: {
     showLoading: Boolean,
   },
+  data(){
+    return {
+      loadingPage
+    }
+  }
 }
 </script>
 

@@ -1,5 +1,10 @@
-import {checkGPS, showAuthTipModal} from "@/utils/common/authorize/appAuthorizes";
+// #ifdef APP-PLUS
+import {checkGPS, showAuthTipModal} from "/utils/common/authorize/appAuthorizes";
+// #endif
+
+// #ifdef MP
 import {mpCheckAuthorizes} from "@/utils/common/authorize/mpAuthorizes";
+// #endif
 
 
 // 拨打电话
@@ -66,7 +71,6 @@ export const uniChooseImage = async ({
     }
     // #endif
 
-    console.log('result', result);
     return new Promise((resolve, reject) => {
         if (!result) return
 
@@ -190,18 +194,9 @@ export const uniOpenLocation = async (options = {}) => {
     })
 
 }
-export const uniWake = async () => {
-    let result = true;
-    result = await showAuthTipModal('SIGNAL_PERSISTENT_PROCESSES')
 
-    return new Promise(resolve => {
-        if (!result) return
 
-        setTimeout(()=>{
-            resolve();
-        },200)
-    })
-}
+// #ifdef APP-PLUS
 export const uniBLUETOOTH = async () => {
     let result = true;
     result = await showAuthTipModal('BLUETOOTH')
@@ -214,3 +209,4 @@ export const uniBLUETOOTH = async () => {
         },200)
     })
 }
+// #endif

@@ -92,8 +92,7 @@
       ]
     }
     // #ifdef APP-PLUS
-    ,
-    {
+  , {
       "root": "pagesZdemo/pagesAppNvu",
       "pages": [
         {
@@ -112,7 +111,6 @@
       ]
     }
     // #endif
-
   ],
   "tabBar": {
     "selectedColor": "#272729",

@@ -22,7 +22,7 @@
     <button @click="customCamera">自定义相机</button>
     <hr/>-->
 
-    <!--    <button @click="buttontn">uniBLUETOOTH</button>-->
+
     <div v-for="(item,index) in 4" :key="index" style="margin-top: 10px;margin-bottom: 10px;">
       AAALorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores, aut consequatur cum delectus deleniti
       eius eos explicabo facere magnam, maxime omnis quam quidem velit voluptas voluptatum.
@@ -35,8 +35,8 @@
 <script>
 import {mapGetters} from 'vuex'
 
-import {ylxBluetoothAuthorize, ylxNavigateTo} from "@/utils/uniTools";
-import useBluetoothManage from "@/utils/common/bluetooth/useBluetoothManage";
+import {ylxNavigateTo} from "@/utils/uniTools";
+
 
 import instanceEventBus from "@/utils/instanceEventBus.js";
 import useLoginInterceptor from "@/utils/useLoginInterceptor";
@@ -80,9 +80,6 @@ export default {
     /*-----------------------------------*/
 
     myOrder() {
-      // this.$showAlert('插件弹框')
-      console.log('myOrder',this.$options);
-      return
       instanceEventBus.emit({
         targetPath: '/pagesSubMine/myOrder/myOrder',
         source: 'xixi'
@@ -113,34 +110,7 @@ export default {
     customCamera() {
       ylxNavigateTo('pagesZdemo/pagesAppNvu/custom-camera/custom-camera')
     },
-    /*-----------------------------------*/
-    buttontn() {
-      const {onSuccess, onError} = ylxBluetoothAuthorize()
-      onSuccess(() => {
-        uni.showToast({title: '正在搜索周围的设备', icon: 'loading', duration: 5000})
-        useBluetoothManage.initBle([])
-            .then(bluetoothList => {
-              const bleList = JSON.parse(JSON.stringify(bluetoothList));
-              this.allBluetoothList = bleList;
-              uni.setStorage({
-                key: 'bluetoothList',
-                data: bleList,
-                success() {
-                  uni.hideToast()
-                  uni.stopPullDownRefresh()
-                },
-              })
-            }).catch(err => {
-          uni.hideToast()
-          console.log('initBle', err)
-        })
-      })
-      onError(() => {
-        this.isInitBle = false
-        this.bleIsConnected = false
-      })
-    }
-    /*-----------------------------------*/
+
 
   }
 }

@@ -1,6 +1,9 @@
+// #ifdef MP
+
 /**
  * https://uniapp.dcloud.net.cn/api/other/authorize.html#scope-%E5%88%97%E8%A1%A8
  * */
+
 export const mpCheckAuthorizes = (scope, rejectionTips) => {
     const scopes = {
         'userInfo': 'scope.userInfo', // 用户信息
@@ -68,4 +71,4 @@ function openSetting(rejectionTips) {
     });
 
 }
-
+// #endif

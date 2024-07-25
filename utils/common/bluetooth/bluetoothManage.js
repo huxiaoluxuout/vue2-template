@@ -1,3 +1,5 @@
+// #ifdef MP
+
 import {showModelHandler} from "@/utils/uniTools";
 
 export class BluetoothManage {
@@ -381,6 +383,7 @@ function hex2int(hex) {
         return acc;
     }, 0);
 }
+// #endif
 
 /*----------------------------------------------------*/
 

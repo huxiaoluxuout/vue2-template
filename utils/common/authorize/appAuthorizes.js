@@ -81,7 +81,7 @@ export const showAuthTipModal = (authorizeTpe, disabled = false) => {
             title: "相册、相机权限说明",
             describe: '相册：便于您使用该功能上传您的照片、图片、视频，完善师傅认证信息。\n相机：便于您使用该功能拍摄图片、录制视频。\n请您确认授权，否则无法使用上述功能'
         },
-
+        // TODO 蓝牙
         ["BLUETOOTH"]: {
             authorize: ["android.permission.BLUETOOTH","android.permission.BLUETOOTH_ADMIN","android.permission.BLUETOOTH",],
             title: "蓝牙权限权限说明",

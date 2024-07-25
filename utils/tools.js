@@ -1,14 +1,3 @@
-import {ylxRedirectTo} from "@/utils/uniTools";
-
-
-const uuid = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16 | 0,
-            v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
-
 // 将参数转换为查询字符串
 const encodeObjectToQueryString = (params, starStr = '?') => {
     if (Object.keys(params).length === 0) {
@@ -117,17 +106,10 @@ function deepEqual(obj1, obj2) {
     return true;
 }
 
-function startTimer(callback, delay = 20, ...args) {
-    let timer = setTimeout(() => {
-        callback(...args);
-        clearTimeout(timer);
-    }, delay);
-}
-
 function simulateOperation() {
     return new Promise((resolve, reject) => {
         const delay = Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000;
-        console.log('延时', delay)
+
         const operationShouldFail = Math.random() < 0.3;// 假设有30%的概率失败
         setTimeout(() => {
             if (operationShouldFail) {
@@ -211,14 +193,12 @@ function removeTrailingZeros(value) {
 }
 
 export {
-    uuid,
     encodeObjectToQueryString,
     encodeParseQueryString,
     objectStyleToString,
     removeElementsByIndex,
     isEmptyData,
     splitQueryUrl,
-    startTimer,
     simulateOperation,
     dataTypeJudge,
     formatTimestamp,

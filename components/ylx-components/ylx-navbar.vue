@@ -19,7 +19,18 @@
             <slot name="center">
               <view class="ylx-navbar-content-title">
                 <template v-if="configNavBar_.title">
-                  <view class="title" :style="titleStyle_">{{ configNavBar_.title }}</view>
+                  <view style="display: flex;align-items: center;width: 100%;" :style="titleStyle_">
+                    <view style="flex:1;"></view>
+                    <!-- #ifdef MP -->
+                    <view class="title" :style="titleStyle">{{ configNavBar_.title }}</view>
+                    <!-- #endif -->
+
+                    <!-- #ifndef MP -->
+                    <view class="title">{{ configNavBar_.title }}</view>
+                    <!-- #endif -->
+                    <view style="flex:1;"></view>
+
+                  </view>
                 </template>
                 <template v-else>
                   <view style="display:flex;justify-content:center;width: 100%;">
@@ -31,14 +42,17 @@
               </view>
             </slot>
           </view>
+
           <view class="ylx-navbar-container__right">
             <slot name="right"></slot>
           </view>
         </view>
       </view>
+      <view :style="{width: rightWidth}"></view>
       <view v-if="overlay" class="overlay"></view>
     </view>
     <view v-if="!hiddenNavbar" :style="{width: '100%',height:navbarHeight + 'px'}"></view>
+
   </view>
 </template>
 <script>
@@ -110,22 +124,26 @@ export default {
   },
   data() {
     return {
-      menuButtonWidth: 0,
+      menuButtonWidth: 15,
       menuButtonTop: 34, //内容高度
       bottomGap: 10,//标题到底部之间的距离
       menuButtonHeight: 0,
-      menuButtonRight: 0,
+
       statusBarHeight: 0,
       pageHierarchy: 1,
       currentPagePath: '',
       viewOpacity: 0,
       liuHaiHeight: 0,// 顶部刘海高度
+
+      titleOffset: 68, // 初始偏移量
     }
   },
 
 
   computed: {
-
+    rightWidth() {
+      return (!this.configNavBar_.hiddenLeftIcon && !this.configNavBar_.isTabBarPage) ? (this.menuButtonWidth + 15) + 'px' : this.menuButtonWidth + 'px'
+    },
     defaultLeftIconName() {
       if (!this.showHomeIcon && this.pageHierarchy > 1) {
         return 'icon-arrow-left-bold'
@@ -138,9 +156,7 @@ export default {
     navbarHeight() {
       // 10 标题到底部之间的距离
       let navbarH = this.bottomGap + this.menuButtonTop + this.statusBarHeight + this.menuButtonHeight + this.liuHaiHeight
-      // console.log({navbarH})
       this.$emit('navbarHeight', navbarH)
-
       this.viewOpacity = 1
       return navbarH
     },
@@ -177,11 +193,9 @@ export default {
 
     ylxNavbarContainerStyle() {
       return ylxStyleObjectToString({
-
         position: 'absolute',
         top: this.defaultContentTop,
         transform: 'translateY(-50%)',
-        marginRight: `calc(${this.menuButtonWidth}px - 1em)`,
       })
     },
 
@@ -213,7 +227,14 @@ export default {
         boxSizing: 'border-box',
       }) + localStringStyle(this.customLeftIconStyle)
     },
-
+    titleStyle() {
+      // 根据标题长度计算偏移量
+      const offset = Math.max(0, this.titleOffset - this.title.length * 6); // 假设每个字符减少6px偏移
+      return {
+        marginLeft: `${offset}px`,
+        transition: 'margin-left 0.3s', // 添加过渡效果
+      };
+    }
 
   },
   beforeCreate() {
@@ -224,9 +245,7 @@ export default {
     // #endif
 
     // #ifdef APP-PLUS
-    systemInfo = uni.getStorageSync('systemInfo') || uni.getSystemInfoSync();
-    uni.setStorageSync('systemInfo', systemInfo)
-
+    systemInfo = uni.getSystemInfoSync();
     // #endif
 
   },
@@ -236,8 +255,13 @@ export default {
     // #ifdef MP-WEIXIN || MP-ALIPAY
     this.menuButtonTop = Math.ceil(menuButtonInfoALI.top);
     this.menuButtonHeight = Math.ceil(menuButtonInfoALI.height);
-    this.menuButtonWidth = Math.ceil(menuButtonInfoALI.width - (375 - menuButtonInfoALI.right));
-    this.menuButtonRight = 0;
+    const that = this
+    uni.getSystemInfo({
+      success(os) {
+        that.menuButtonWidth = Math.ceil(os.screenWidth - menuButtonInfoALI.left + 34);
+      }
+    })
+
     // #endif
 
     // #ifdef APP-PLUS
@@ -289,7 +313,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
- @import "./ylx-static/iconfont.css";
+@import "ylx-static/iconfont.css";
 
 .ylx-navbar {
   box-sizing: border-box;
@@ -313,7 +337,6 @@ export default {
   height: 100%;
   /* 两端距离 */
   margin-left: 30rpx;
-  margin-right: 30rpx;
   z-index: 10;
 }
 
@@ -325,13 +348,13 @@ export default {
   align-items: center;
   left: 0;
   right: 0;
-
 }
 
 .navbar-container__left:not(:empty) {
   min-width: 1em;
   box-sizing: border-box;
   position: relative;
+  margin-right: 2px;
 }
 
 
@@ -343,21 +366,20 @@ export default {
 
 
 .ylx-navbar-container__right {
-  min-width: 1em;
   display: flex;
   justify-content: flex-end;
-  font-size: 22px;
 }
 
 .ylx-navbar-content-title {
   display: flex;
   align-items: center;
   flex: 1;
-  justify-content: center;
+
 
 }
 
 .title {
+
   overflow: hidden;
   word-break: break-all;
   /* break-all(允许在单词内换行。) */
@@ -373,12 +395,12 @@ export default {
 }
 
 /*---------------------------------*/
-.overlay  {
-  position:  absolute;
-  top:  0;
-  left:  0;
-  width:  100%;
-  height:  100%;
-  background-color: #f3f3f3c4;  /*  黑色半透明，透明度0.5  */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f3f3f3c4; /*  黑色半透明，透明度0.5  */
 }
 </style>

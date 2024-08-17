@@ -192,6 +192,11 @@ export default {
   background-repeat: no-repeat;
 }
 
+.loading-class {
+  //background-image: url(var(--loading-src));
+}
+
+
 @keyframes loading {
   0% {
     transform: translate(-50%, -50%) rotate(0deg);

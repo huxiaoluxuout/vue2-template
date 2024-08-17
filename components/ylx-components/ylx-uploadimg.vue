@@ -28,6 +28,7 @@ import {ylxNavigateTo, ylxStyleObjectToString} from "@/utils/uniTools";
 import {componentsMixin, localStringStyle} from "@/components/ylx-components/ylx-JS/template";
 import {uniChooseImage} from "@/utils/common/authorize/uniApi";
 import {camera, close} from "@/components/ylx-components/ylx-static/base64.js";
+import {uploadFilePromise} from "@/components/ylx-components/ylx-JS/uploadFilePromise.js";
 
 export default {
   name: "ylx-uploadimg",
@@ -92,6 +93,18 @@ export default {
 
     hidden: Boolean,//视觉隐藏
     preview: Boolean,
+
+    imgSuccessHandler: {
+      type: Function,
+      default: (res, resolve) => {
+        let resData = JSON.parse(res.data)
+        if (resData.code === 0) {
+          resolve(resData.data.fullurl)
+        } else {
+          console.error('处理后端返回上传成功后的数据', resData.msg)
+        }
+      }
+    },
   },
 
   computed: {
@@ -130,7 +143,7 @@ export default {
 
       }
 
-    },
+    }
   },
 
   methods: {
@@ -220,7 +233,7 @@ export default {
       })
 
       for (let i = 0; i < arrFile.length; i++) {
-        const imgUrl = await that.uploadFilePromise(arrFile[i].url)
+        const imgUrl = await this.uploadFilePromise(arrFile[i].url, {imgSuccessHandler: that.imgSuccessHandler})
         const item = that.localFileList[fileImageListLen]
         that.$emit('updateFileImageList', {
           type: 'success',
@@ -239,29 +252,8 @@ export default {
 
     },
     // 上传图片
-    uploadFilePromise(tempFilePath) {
-      return new Promise((resolve) => {
-        uni.uploadFile({
-          url: this.action,
-          filePath: tempFilePath,
-          fileType: this.fileType,
-          name: this.fileName,
-          success: (res) => this.imgSuccess(res, resolve)
-        })
-      })
-    },
+    uploadFilePromise: uploadFilePromise,
 
-    imgSuccess(res, resolve) {
-      /**
-       * TODO 处理后端返回上传成功后的数据
-       * */
-      let resData = JSON.parse(res.data)
-      if (resData.code === 0) {
-        resolve(resData.data.fullurl)
-      } else {
-        console.error(resData.msg)
-      }
-    },
   }
 
 }

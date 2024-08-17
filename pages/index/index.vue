@@ -16,6 +16,8 @@
     <button @click="sendGlobal">sendGlobal</button>
     <button @click="eventBusMine">eventBusMine</button>
     <hr/>
+    <button @click="test">test</button>
+    state:{{state}}
 
 <!--    <hr/>
     <button @click="tiktok">抖音</button>
@@ -39,7 +41,8 @@ import {ylxNavigateTo} from "@/utils/uniTools";
 
 
 import instanceEventBus from "@/utils/instanceEventBus.js";
-import useLoginInterceptor from "@/utils/useLoginInterceptor";
+import useMustLogIn, {loginProxy} from "@/utils/useMustLogIn";
+
 /*-------------------------------------------------------*/
 export default {
   data() {
@@ -54,12 +57,20 @@ export default {
       bleIsConnected: false,// 蓝牙已经连接
       allBluetoothList: [],
       /*------------------------------------------*/
+      state: Object.assign({}, loginProxy)
     };
   },
 
   computed: {
-    ...mapGetters(['hasLogged'])
+    ...mapGetters(['hasLogged']),
+
   },
+  /*watch: {
+    'state.login'(newVal, oldVal) {
+      // 3. 当代理对象属性变化时，确保Vue能检测到
+      console.log(`login 属性从 ${oldVal} 变为 ${newVal}`);
+    }
+  },*/
   onLoad() {
 
   },
@@ -84,8 +95,12 @@ export default {
         source: 'xixi'
       }, true)
     },
+    test() {
+      this.state.login=!this.state.login
+    },
     instanceMyOrderHandler() {
-      useLoginInterceptor({onSuccess: this.myOrder})()
+      const handler=useMustLogIn({onSuccess:this.myOrder})
+      handler()
     },
     setLoggedIn() {
       this.$store.dispatch('asyncSetIsLoggedIn', !this.hasLogged)

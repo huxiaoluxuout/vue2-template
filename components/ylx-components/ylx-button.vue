@@ -25,7 +25,7 @@ export default {
     },
     bgColor: {
       type: String,
-      default: '#5CBAFA' // 'transparent'
+      default: '#272729' // 'transparent'
     },
     height: {
       type: String,
@@ -39,11 +39,9 @@ export default {
       type: String,
       default: '100px'
     },
-    disabled: Boolean
 
   },
   computed: {
-
     resultCustomStyle() {
       return ylxStyleObjectToString({
         height: this.height,
@@ -52,13 +50,14 @@ export default {
         borderRadius: this.rounded,
         backgroundColor: this.bgColor,
         color: this.color,
-      }) + localStringStyle(this.customStyle) + (`filter:grayscale(${this.disabled ? .98 : 0}) opacity(${this.disabled ? 0.8 : 1}) `)
+      }) + localStringStyle(this.customStyle)
     },
   },
 
   methods: {
     btnClick() {
-      !this.disabled ? this.$emit('btnClick') : this.$emit('btnClickErr')
+      !this.disabled ? this.$emit('btnClick') :
+          this.$emit('btnClickErr')
     },
   }
 

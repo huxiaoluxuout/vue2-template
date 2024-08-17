@@ -83,6 +83,3 @@ export class EventBusCore {
         this.listeners.clear();
     }
 }
-
-
-

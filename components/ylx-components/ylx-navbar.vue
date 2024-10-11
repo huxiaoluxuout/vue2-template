@@ -62,7 +62,8 @@ import {ylxFilterPath, ylxNavigateTo, ylxStyleObjectToString} from "@/utils/uniT
 import {localStringStyle} from "@/components/ylx-components/ylx-JS/template";
 
 
-const {tabBar: {list: tabBarPages} = {list: []}} = pagesConfig
+const {tabBar: {list: tabBarPages = []} = { list: [] }} = pagesConfig || {};
+
 
 let menuButtonInfoALI = null, systemInfo = null, pages = null;
 

@@ -6,75 +6,68 @@
                    @updateFileImageList="updateFileImageList"></ylx-uploadimg>
 
     <button @click="uploadimg">uploadimg</button>
-    <hr/>
 
-    hasLogged:{{ hasLogged }}
-    <button @click="setLoggedIn">asyncSetIsLoggedIn</button>
-    <button @click="instanceMyOrderHandler">my-order</button>
-
-    <hr/>
     <button @click="sendGlobal">sendGlobal</button>
-    <button @click="eventBusMine">eventBusMine</button>
+    <button @click="eventBusMine">跳转tabbar页面</button>
     <hr/>
-    <button @click="test">test</button>
-    state:{{state}}
+
+    <button @click="instanceMyOrderHandler">my-order(需登录)</button>
+
+    <button @click="handleLogin">hasLogin:{{hasLogin}}</button>
+
+
+
 
 <!--    <hr/>
     <button @click="tiktok">抖音</button>
     <button @click="customCamera">自定义相机</button>
     <hr/>-->
 
-
-    <div v-for="(item,index) in 4" :key="index" style="margin-top: 10px;margin-bottom: 10px;">
-      AAALorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores, aut consequatur cum delectus deleniti
-      eius eos explicabo facere magnam, maxime omnis quam quidem velit voluptas voluptatum.
-    </div>
     <!--  -->
   </view>
 </template>
 
 
 <script>
-import {mapGetters} from 'vuex'
 
-import {ylxNavigateTo} from "@/utils/uniTools";
+
+import {ylxNavigateTo, ylxRedirectTo} from "@/utils/uniTools";
 
 
 import instanceEventBus from "@/utils/instanceEventBus.js";
-import useMustLogIn, {loginProxy} from "@/utils/useMustLogIn";
+// import useMustLogIn, {loginProxy} from "@/utils/useMustLogIn";
+
+import {ylxEventBus, ylxMustLogIn} from "@/ylxuniCore/useylxuni";
 
 /*-------------------------------------------------------*/
 export default {
   data() {
     return {
       fileImageList: [
-        {url: "https://mf.hzjxsj.com/uploads/20240706/790ec706d1ad37a8e11617af3385fdfa.xpng"},
+        {url: "https://mf.hzjxsj.com/uploads/20240706/790ec706d1ad37a8e11617af3385fdfa.png"},
         {url: "https://mf.hzjxsj.com/uploads/20240706/790ec706d1ad37a8e11617af3385fdfa.png"},
         {url: "https://mf.hzjxsj.com/uploads/20240706/790ec706d1ad37a8e11617af3385fdfa.png"},
       ],
-      /*------------------------------------------*/
-      isInitBle: false,// 蓝牙已经初始化
-      bleIsConnected: false,// 蓝牙已经连接
-      allBluetoothList: [],
-      /*------------------------------------------*/
-      state: Object.assign({}, loginProxy)
+
+      /*-----------------1.登录-------------------------*/
+      loginProxy:ylxMustLogIn.loginProxyObject
     };
   },
-
-  computed: {
-    ...mapGetters(['hasLogged']),
-
+  computed:{
+    /*-----------------2.登录-------------------------*/
+    hasLogin() {
+      return this.loginProxy.login
+    },
   },
-  /*watch: {
-    'state.login'(newVal, oldVal) {
-      // 3. 当代理对象属性变化时，确保Vue能检测到
-      console.log(`login 属性从 ${oldVal} 变为 ${newVal}`);
-    }
-  },*/
+
   onLoad() {
 
   },
   methods: {
+    ylxNavigateTo,
+    ylxRedirectTo,
+
+    /*--------------上传图片---------------------*/
     updateFileImageList({type, param}) {
       if (type === 'del') {
         this.fileImageList.splice(param, 1)
@@ -90,39 +83,53 @@ export default {
     /*-----------------------------------*/
 
     myOrder() {
-      instanceEventBus.emit({
+      /*instanceEventBus.emit({
         targetPath: '/pagesSubMine/myOrder/myOrder',
         source: 'xixi'
-      }, true)
+      }, true)*/
+
+      ylxEventBus.emit({
+        targetPath: '/pagesSubMine/myOrder/myOrder',
+        options: {age: 18},
+        source: 'xixi',
+      },true)
     },
-    test() {
-      this.state.login=!this.state.login
+
+
+    handleLogin() {
+      console.log('1 handleLogin',ylxMustLogIn.loginProxyObject.login);
+      ylxMustLogIn.loginProxyObject.login=!ylxMustLogIn.loginProxyObject.login
+      console.log('2 handleLogin',ylxMustLogIn.loginProxyObject.login);
+    },
+    toLogin() {
+      console.log('11111;toLogin')
     },
     instanceMyOrderHandler() {
-      const handler=useMustLogIn({onSuccess:this.myOrder})
-      handler()
+
+      ylxMustLogIn.interceptMastLogIn({
+        alreadyLoggedIn:this.myOrder,
+
+      })()
+
     },
-    setLoggedIn() {
-      this.$store.dispatch('asyncSetIsLoggedIn', !this.hasLogged)
-    },
+
 
 
     eventBusMine() {
-      instanceEventBus.emit({
+      /*instanceEventBus.emit({
         targetPath: '/pages/mine/mine',
         options: {age: 18}
-      }, true, 'switchTab')
+      }, true, 'switchTab')*/
+
+
+      ylxEventBus.emit({
+        targetPath: '/pages/mine/mine',
+        options: {age: 18}
+      },true,'switchTab')
     },
 
     sendGlobal() {
       instanceEventBus.sendGlobal()
-    },
-    /*----------------------------------------*/
-    tiktok() {
-      ylxNavigateTo('pagesZdemo/pagesAppNvu/dou_yin/dou_yin')
-    },
-    customCamera() {
-      ylxNavigateTo('pagesZdemo/pagesAppNvu/custom-camera/custom-camera')
     },
 
 

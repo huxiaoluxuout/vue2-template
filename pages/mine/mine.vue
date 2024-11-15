@@ -1,7 +1,7 @@
 <template>
   <view class="page-content-tabbar">
     <ylx-gap height="1rpx"></ylx-gap>
-    hasLogged:{{hasLogged}}
+
     <view class="nav-bottom-wrapper">
       <view class="flex align-center justify-between nav-item" v-for="item in myOrderGridList" :key="item.id" @click="ylxNavigateTo(item.pagePath+'?id='+item.id)">
         <text class="nav-text">{{ item.text }}</text>
@@ -11,7 +11,7 @@
   </view>
 </template>
 <script>
-import instanceEventBus from "@/utils/instanceEventBus.js";
+
 import {ylxNavigateTo} from "@/utils/uniTools";
 import {mapGetters} from 'vuex'
 
@@ -31,11 +31,7 @@ export default {
     ...mapGetters(['hasLogged'])
   },
   onLoad() {
-    instanceEventBus.on(({args, source}) => {
-      console.log(...args, source)
-      let [{fromPage,age}]=args
-      console.log(fromPage,age)
-    });
+
   },
   methods: {ylxNavigateTo}
 }

@@ -3,31 +3,21 @@
   import {wxLogin} from "@/network/apis/meiFa";
   import store from "@/store";
   import {ylxOpenWxDebug} from "@/utils/uniTools";
+  import {ylxEventBus} from "@/ylxuniCore/useylxuni";
 
   function getWxLoginInfo() {
-    wxLogin().then((loginRes) => {
-      console.log(loginRes.data);
-      store.dispatch('asyncLogin',{age: 18,name:'测试'})
 
-      if (!loginRes.data.is_register) {
-
-      } else {
-        // store.dispatch('login',loginRes.data)
-
-      }
-
-    })
   }
   export default {
 		onLaunch: function() {
 			console.log('App Launch')
-      ylxOpenWxDebug()
+      // ylxOpenWxDebug()
+      /*instanceEventBus.registerGlobalEvent(({args, source}) => {
+        console.log('instanceEventBus',args[0],source)
+      })*/
 
-      getWxLoginInfo()
-      instanceEventBus.registerGlobalEvent(({args, source}) => {
-        console.log('App Launch', ...args, source)
-        getWxLoginInfo()
-
+      ylxEventBus.onGlobal(({args, source})=>{
+        console.log('ylxEventBus',args[0], source)
       })
 
 		},

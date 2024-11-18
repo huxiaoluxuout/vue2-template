@@ -5,8 +5,8 @@
 .ylx-flex-container {
     --num-columns: 2;
     --out-gap: 0;
-    --view-gap-x:20rpx;
-    --view-gap-y:20rpx;
+    --view-gap-x:30rpx;
+    --view-gap-y:30rpx;
 
     --item-width: calc(100% / var(--num-columns) - var(--view-gap-x));
 

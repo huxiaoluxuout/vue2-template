@@ -1,15 +1,24 @@
+.ylx-flex-container-wrapper{
+    --width:750rpx;
+    width: var(--width);
+}
 .ylx-flex-container {
+    --num-columns: 2;
+    --out-gap: 0;
+    --view-gap-x:20rpx;
+    --view-gap-y:20rpx;
+
+    --item-width: calc(100% / var(--num-columns) - var(--view-gap-x));
+
     display: flex;
     flex-wrap: wrap;
-    --num-columns: 2;
-    --gap: 20rpx;
-    --out-gap: 0rpx;
-    --item-width: calc(100% / var(--num-columns) - var(--gap));
-    gap: var(--gap);
-    margin-right: calc(-1 * var(--gap));
+    column-gap:var(--view-gap-x);
+    row-gap:var(--view-gap-y);
+    margin-right: calc(-1 * var(--view-gap-x));
 
     padding-left: var(--out-gap);
     padding-right: var(--out-gap);
+
 }
 
 .ylx-flex-item {

@@ -171,6 +171,7 @@
 .text-hidden-1{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .text-hidden-2{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-all}
 .text-nowrap{white-space:nowrap}
+.w-750{width:750rpx}
 .w-auto{width:auto}
 .w-full{width:100%}
 .w-100vw{width:100vw}

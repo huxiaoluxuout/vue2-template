@@ -69,5 +69,18 @@
     padding-bottom: 30rpx;
     box-sizing: border-box;
 }
+.ylx-btn:after{
+    border: none;
+}
+.ylx-open-type {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+    background-color: transparent;
+}
+
 /*-----------------------------------------*/
 

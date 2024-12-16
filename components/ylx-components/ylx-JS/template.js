@@ -1,6 +1,6 @@
 import {ylxStyleObjectToString} from "@/utils/uniTools";
 
- const localStringStyle = (style) => {
+const localStringStyle = (style) => {
     if (typeof style === 'string') {
         return style;
     } else {
@@ -10,7 +10,7 @@ import {ylxStyleObjectToString} from "@/utils/uniTools";
     }
 };
 
- const componentsMixin = {
+const componentsMixin = {
     options: {
         virtualHost: true
     },
@@ -24,6 +24,11 @@ import {ylxStyleObjectToString} from "@/utils/uniTools";
             default: ''
         },
 
+    },
+    computed: {
+        customStringStyle() {
+            return localStringStyle(this.customStyle)
+        },
     }
 };
 export {

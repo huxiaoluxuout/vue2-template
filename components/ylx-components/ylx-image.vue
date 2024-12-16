@@ -117,7 +117,7 @@ export default {
 
       return ylxStyleObjectToString({
         ...attrObj
-      }) + localStringStyle(this.customStyle)
+      }) + this.customStringStyle
     },
 
     resultLoadingStyle() {

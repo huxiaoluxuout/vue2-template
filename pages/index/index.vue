@@ -6,22 +6,29 @@
                    @updateFileImageList="updateFileImageList"></ylx-uploadimg>
 
     <button @click="uploadimg">uploadimg</button>
+    <!-- #ifdef MP -->
+    <view class="relative">
+      <button class="ylx-open-type" open-type="chooseAvatar" @chooseavatar="uniApiChooseAvatar"></button>
+      <view class="fs-24">修改头像</view>
+    </view>
+    <hr/>
+    <!-- #endif -->
+
 
     <button @click="sendGlobal">sendGlobal</button>
     <button @click="eventBusMine">跳转tabbar页面</button>
     <hr/>
 
-    <button @click="instanceMyOrderHandler">my-order(需登录)</button>
+    <button @click="ylxNavigateTo('/pagesSubMine/myOrder/myOrder')"> 1. my-order</button>
+    <button @click="interceptToPage(ylxNavigateTo,'/pagesSubMine/myOrder/myOrder')">2. my-order(需要登录)</button>
+    <button @click="setToggle">设置登录状态 hasLogin:{{ hasLogin }}</button>
+    <view>hasLoading:{{ hasLoading }}</view>
 
-    <button @click="handleLogin">hasLogin:{{hasLogin}}</button>
 
-
-
-
-<!--    <hr/>
-    <button @click="tiktok">抖音</button>
-    <button @click="customCamera">自定义相机</button>
-    <hr/>-->
+    <!--    <hr/>
+        <button @click="tiktok">抖音</button>
+        <button @click="customCamera">自定义相机</button>
+        <hr/>-->
 
     <!--  -->
   </view>
@@ -30,17 +37,17 @@
 
 <script>
 
-
 import {ylxNavigateTo, ylxRedirectTo} from "@/utils/uniTools";
 
+import {ylxEventBus, ylxMustLogIn, ylxNextPage} from "@/ylxuniCore/useylxuni";
+import {imgHttpSuccess, uploadFileCallback} from "@/components/ylx-components/ylx-JS/uploadFilePromise";
 
-import instanceEventBus from "@/utils/instanceEventBus.js";
-// import useMustLogIn, {loginProxy} from "@/utils/useMustLogIn";
 
-import {ylxEventBus, ylxMustLogIn} from "@/ylxuniCore/useylxuni";
+const {ylxRefresh,ylxMixins, ylxSetFun, ylxSetData, ylxInvokeFn} = ylxNextPage.useNextPage()
 
 /*-------------------------------------------------------*/
 export default {
+  mixins:[ylxMixins],
   data() {
     return {
       fileImageList: [
@@ -50,18 +57,35 @@ export default {
       ],
 
       /*-----------------1.登录-------------------------*/
-      loginProxy:ylxMustLogIn.loginProxyObject
+      loginProxy: ylxMustLogIn.loginProxyObject,
+
+      /*-----------------1.加载中-------------------------*/
+      loadingProxy: ylxNextPage.loadingProxyObject,
+      list:[]
     };
   },
-  computed:{
+  computed: {
     /*-----------------2.登录-------------------------*/
     hasLogin() {
       return this.loginProxy.login
     },
+
+    /*-----------------2.加载中-------------------------*/
+    hasLoading() {
+      return this.loadingProxy.loading
+    },
+
+    /*-----------------头像-------------------------*/
+    avatar() {
+      return this.fileImageList[0].url || ''
+    },
+
   },
 
   onLoad() {
 
+    ylxSetFun(this.add)
+    ylxInvokeFn()
   },
   methods: {
     ylxNavigateTo,
@@ -80,56 +104,60 @@ export default {
     uploadimg() {
       this.$refs.refUploadimg.chooseFile()
     },
-    /*-----------------------------------*/
 
+    // 上传小程序头像
+    uniApiChooseAvatar(avatar) {
+      let tempFile = avatar.detail.avatarUrl
+      uploadFileCallback(tempFile, imgHttpSuccess, (url) => {
+        this.fileImageList = [{url: url}]
+      })
+    },
+    /*--------------上传图片---------------------*/
+
+    /*--------------页面跳转---------------------*/
     myOrder() {
-      /*instanceEventBus.emit({
-        targetPath: '/pagesSubMine/myOrder/myOrder',
-        source: 'xixi'
-      }, true)*/
 
       ylxEventBus.emit({
         targetPath: '/pagesSubMine/myOrder/myOrder',
         options: {age: 18},
         source: 'xixi',
-      },true)
+      }, true)
     },
+    /*--------------页面跳转---------------------*/
 
-
-    handleLogin() {
-      console.log('1 handleLogin',ylxMustLogIn.loginProxyObject.login);
-      ylxMustLogIn.loginProxyObject.login=!ylxMustLogIn.loginProxyObject.login
-      console.log('2 handleLogin',ylxMustLogIn.loginProxyObject.login);
-    },
-    toLogin() {
-      console.log('11111;toLogin')
-    },
-    instanceMyOrderHandler() {
-
-      ylxMustLogIn.interceptMastLogIn({
-        alreadyLoggedIn:this.myOrder,
-
+    /*-------------------ylxMustLogIn-----------------------------*/
+    interceptToPage(fn, ...args) {
+      ylxMustLogIn.intercept({
+        success: () => fn(...args),
+        fail: () => ylxNavigateTo('/pages/login/login')
       })()
-
     },
+    setToggle() {
+      ylxMustLogIn.loginProxyObject.login = !ylxMustLogIn.loginProxyObject.login
+    },
+    /*-------------------ylxMustLogIn-----------------------------*/
 
-
-
+    /*-------------------ylxEventBus-----------------------------*/
     eventBusMine() {
-      /*instanceEventBus.emit({
-        targetPath: '/pages/mine/mine',
-        options: {age: 18}
-      }, true, 'switchTab')*/
-
 
       ylxEventBus.emit({
         targetPath: '/pages/mine/mine',
         options: {age: 18}
-      },true,'switchTab')
+      }, true, 'switchTab')
     },
 
     sendGlobal() {
-      instanceEventBus.sendGlobal()
+      ylxEventBus.emitGlobal()
+    },
+    /*-------------------ylxEventBus-----------------------------*/
+
+    /*------------------------------------------------*/
+    //模拟请求接口，获取数据
+    add() {
+      setTimeout(() => {
+        console.log({time: new Date().getSeconds()})
+        this.list = ylxSetData({}, {time: new Date().getSeconds()})
+      }, 2000)
     },
 
 

@@ -1,21 +1,10 @@
 <script>
-	import instanceEventBus from "@/utils/instanceEventBus";
-  import {wxLogin} from "@/network/apis/meiFa";
-  import store from "@/store";
-  import {ylxOpenWxDebug} from "@/utils/uniTools";
+  // import store from "@/store";
+
   import {ylxEventBus} from "@/ylxuniCore/useylxuni";
-
-  function getWxLoginInfo() {
-
-  }
   export default {
 		onLaunch: function() {
 			console.log('App Launch')
-      // ylxOpenWxDebug()
-      /*instanceEventBus.registerGlobalEvent(({args, source}) => {
-        console.log('instanceEventBus',args[0],source)
-      })*/
-
       ylxEventBus.onGlobal(({args, source})=>{
         console.log('ylxEventBus',args[0], source)
       })

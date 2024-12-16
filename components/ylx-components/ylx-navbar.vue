@@ -162,6 +162,8 @@ export default {
       // 10 标题到底部之间的距离
       let navbarH = this.bottomGap + this.menuButtonTop + this.statusBarHeight + this.menuButtonHeight + this.liuHaiHeight
       this.$emit('navbarHeight', navbarH)
+      this.$emit('onNavbar', {navbarHeight:navbarH,loadedPages:pages})
+
       this.viewOpacity = 1
       return navbarH
     },

@@ -6,7 +6,9 @@
 </template>
 
 <script>
-import instanceEventBus from "@/utils/instanceEventBus.js";
+
+
+import {ylxEventBus} from "@/ylxuniCore/useylxuni";
 
 export default {
   data() {
@@ -29,7 +31,7 @@ export default {
     },
   },
   onLoad(option) {
-    instanceEventBus.on(({args, source}) => {
+    ylxEventBus.on(({args, source}) => {
       console.log('instanceWxEventBus', ...args, source)
     });
 

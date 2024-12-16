@@ -1,0 +1,23 @@
+{
+  "name": "vue2-template",
+  "version": "1.0.0",
+  "description": "```yalc add ylxuni```",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huxiaoluxuout/vue2-template.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/huxiaoluxuout/vue2-template/issues"
+  },
+  "homepage": "https://github.com/huxiaoluxuout/vue2-template#readme",
+  "dependencies": {
+    "ylxuni": "file:.yalc/ylxuni"
+  }
+}
